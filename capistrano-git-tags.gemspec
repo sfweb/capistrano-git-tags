@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
     With every commit tag the local and remote branch with a tag
   EOF
 
-  s.files = ["CHANGELOG.rdoc", "lib/capistrano/git/tags.rb", "MIT-LICENSE", "README.markdown", "Manifest"]
+  s.files = ["CHANGELOG.rdoc", "lib/capistrano/git/tags.rb", "lib/capistrano/git/release_notes.rb", "MIT-LICENSE", "README.markdown", "Manifest"]
 
   s.authors     = ["Leon Berenschot"]
   s.email       = ["LeonB@beriedata.nl"]
