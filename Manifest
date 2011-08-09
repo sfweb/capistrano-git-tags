@@ -1,5 +1,6 @@
 CHANGELOG.rdoc
 lib/capistrano/git/tags.rb
+lib/capistrano/git/release_notes.rb
 MIT-LICENSE
 README.markdown
 Manifest

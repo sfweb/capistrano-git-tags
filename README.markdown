@@ -10,6 +10,7 @@ Install:
 usage: put this in the top in your deploy.rb:
 
     require 'capistrano/git/tags'
+    require 'capistrano/git/release_notes'
 
 TODO
 ---
