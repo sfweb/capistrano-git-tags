@@ -14,7 +14,7 @@ Capistrano::Configuration.instance.load do
     namespace :tags do
 
       def tag_format(options = {})
-        tag_format = git_tag_format || ":rails_env_:release"
+        tag_format = ":rails_env_:release"
         tag_format = tag_format.gsub(":rails_env", options[:rails_env] || rails_env)
         tag_format = tag_format.gsub(":release",   options[:release]   || "")
         tag_format
