@@ -7,14 +7,14 @@ require 'tempfile'
 
 Capistrano::Configuration.instance.load do
 
-  after  "git:tags:push_deploy_tag", "git:release_notes:build_release_notes"
+  after  "git:tags:push_deploy_tag", "git:release_notes:build"
 
   namespace :git do
 
     namespace :release_notes do
 
       desc "Ask deploy user if release notes have been updated and build VERSION file"
-      task :build_release_notes do
+      task :build do
         user = `git config --get user.name`
         email = `git config --get user.email`
         deployed = `git describe --abbrev=0`
