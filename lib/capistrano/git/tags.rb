@@ -6,7 +6,7 @@ require 'capistrano'
 
 Capistrano::Configuration.instance.load do
 
-  before  "deploy:update", "git:tags:push_deploy_tag"
+  after "git:release_notes:push_version_file", "git:tags:push_deploy_tag"
   before "deploy:cleanup", "git:tags:cleanup_deploy_tag"
 
   namespace :git do
