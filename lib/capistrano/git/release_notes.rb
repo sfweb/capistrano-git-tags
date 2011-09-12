@@ -61,8 +61,8 @@ Capistrano::Configuration.instance.load do
       
       desc "Push git revision with new VERSION file"
 			task :push_version_file do
-				version_notes = File.read(rails_root + "/public/VERSION")
-				`git add #{version_notes}` unless version_notes.exists?
+				version_notes = File.expand_path('VERSION',rails_root + "/public")
+				`git add #{version_notes}` unless File.exists?(version_notes)
 				`git commit -a -m "update version file for deploy"`
 				`git push origin master`
 			end
