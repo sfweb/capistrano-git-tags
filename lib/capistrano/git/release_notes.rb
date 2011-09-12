@@ -7,7 +7,7 @@ require 'tempfile'
 
 Capistrano::Configuration.instance.load do
 
-  after  "git:tags:push_deploy_tag", "git:release_notes:build"
+	after "git:tags:push_deploy_tag", "git:release_notes:build"
 
   namespace :git do
 
@@ -45,9 +45,11 @@ Capistrano::Configuration.instance.load do
 						File.open(rails_root + "/config/CHANGELOG",'w') {|file| file << ""}
 					else
 						puts "Lies! You must update /config/CHANGELOG before deploying this application."
+						task :deploy:rollback
 					end
 				else
 					puts "You must update /config/CHANGELOG before deploying this application."
+					task :deploy:rollback
 				end
       end
 
