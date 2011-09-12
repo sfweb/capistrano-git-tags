@@ -44,12 +44,10 @@ Capistrano::Configuration.instance.load do
 				    end
 						File.open(rails_root + "/config/CHANGELOG",'w') {|file| file << ""}
 					else
-						puts "Lies! You must update /config/CHANGELOG before deploying this application."
-						task :deploy:rollback
+						raise Capistrano::CommandError, "You must update /config/CHANGELOG before deploying this application."
 					end
 				else
-					puts "You must update /config/CHANGELOG before deploying this application."
-					task :deploy:rollback
+					raise Capistrano::CommandError, "You must update /config/CHANGELOG before deploying this application."
 				end
       end
 
