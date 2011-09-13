@@ -10,10 +10,12 @@ Install:
 usage: put this in the top in your deploy.rb:
 
     Dir.new(File.dirname("#{ENV['GEM_HOME']}/bundler/gems/*")).each do |file|
-        $:.push("#{ENV['GEM_HOME']}/bundler/gems/#{file}/lib",ENV['GEM_HOME'])
+    	$:.push("#{ENV['GEM_HOME']}/bundler/gems/#{file}/lib",ENV['GEM_HOME'])
     end
     require 'capistrano/git/tags'
     require 'capistrano/git/release_notes'
+    require 'capistrano/git/notifier'
+    set :email_recipients, "sfweb@sourcefire.com"
 
 TODO
 ---
