@@ -41,12 +41,13 @@ Capistrano::Configuration.instance.load do
 				end
 				
 		  end
-		end
 		
-		desc 'Alert e-mail lists of a deploy'
-		task :mailer do
-			release_notes = File.read(rails_root + "/config/CHANGELOG")
-			Pony.mail(:to => 'sfweb@sourcefire.com', :via => :sendmail, :body => release_notes)
+		
+			desc 'Alert e-mail lists of a deploy'
+			task :mailer do
+				release_notes = File.read(rails_root + "/config/CHANGELOG")
+				Pony.mail(:to => 'sfweb@sourcefire.com', :via => :sendmail, :body => release_notes)
+			end
 		end
 	end
 end
