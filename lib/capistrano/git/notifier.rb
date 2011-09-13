@@ -28,6 +28,7 @@ Capistrano::Configuration.instance.load do
         email = `git config --get user.email`
 		    deployer = "#{user} (#{email})"
 		    source_repo = `git config --get remote.origin.url`.split(':')[1].split('.')[0]
+		    application_name = `git config --get remote.origin.url`.strip.split('/').last.split('.').first
 		    tags = `git tag -l`.split(/\n/).reverse
 		    
 		    deployed = tags[1]
@@ -37,7 +38,7 @@ Capistrano::Configuration.instance.load do
 				campfire = Tinder::Campfire.new 'pig', :token => 'f40051873e877ad46c2adcf59902174e7fab0376'
 				room = campfire.find_room_by_name("The Web Team")
 				room.speak "#{deployer} deployed "
-				room.speak "#{branch_name} (#{deployed}..#{deploying}) to #{rails_env} "
+				room.speak "#{branch_name} branch of #{application_name} to #{rails_env} "
 				room.speak "with `cap #{ARGV.join(' ')}` (#{compare_url})"
 				
 		  end
