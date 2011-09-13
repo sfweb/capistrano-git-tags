@@ -9,6 +9,7 @@ Capistrano::Configuration.instance.load do
 
 	before "deploy:update", "git:release_notes:build"
 	after "git:release_notes:build", "git:release_notes:push_version_file"
+	after "git:notifier:campfire", "git:release_notes:empty_changelog"
 
   namespace :git do
 
@@ -50,7 +51,6 @@ Capistrano::Configuration.instance.load do
 				        file.write(tempfile.read)
 				      end
 				    end
-						File.open(rails_root + "/config/CHANGELOG",'w') {|file| file << ""}
 					else
 						raise Capistrano::CommandError, "Lies! You must update /config/CHANGELOG before deploying this application."
 					end
@@ -58,6 +58,12 @@ Capistrano::Configuration.instance.load do
 					raise Capistrano::CommandError, "You must update /config/CHANGELOG before deploying this application."
 				end
       end
+      
+      desc "Empty changelog for next deploy"
+      task :empty_changelog do
+      	File.open(rails_root + "/config/CHANGELOG",'w') {|file| file << ""}
+      end
+      
       
       desc "Push git revision with new VERSION file"
 			task :push_version_file do
