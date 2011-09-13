@@ -12,10 +12,18 @@ Capistrano::Configuration.instance.load do
   namespace :git do
 
 		namespace :notifier do
+		
+			def tag_format(options = {})
+        tag_format = ":rails_env_:release"
+        tag_format = tag_format.gsub(":rails_env", options[:rails_env] || rails_env)
+        tag_format = tag_format.gsub(":release",   options[:release]   || "")
+        tag_format
+      end
+      
 		  desc 'Alert Campfire of a deploy'
 		  task :campfire do
 		
-		    branch_name = branch.split('/', 2).last
+		    branch_name = `git branch`.split(/\s/)[1]
 		    user = `git config --get user.name`
         email = `git config --get user.email`
 		    deployer = "#{user} (#{email})"
