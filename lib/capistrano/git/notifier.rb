@@ -9,6 +9,7 @@ require 'pony'
 Capistrano::Configuration.instance.load do
 
 	after "deploy:update", "git:notifier:campfire"
+	after "git:notifier:campfire", "git:notifier:mailer"
 	
   namespace :git do
 
