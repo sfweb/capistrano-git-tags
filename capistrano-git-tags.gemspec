@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://github.com/leipeleon/capistrano-git-tags"
 
   s.add_dependency("capistrano", [">= 1.0.0"])
+  s.add_dependency("tinder")
 
   s.has_rdoc = false
 end

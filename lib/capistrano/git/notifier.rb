@@ -3,7 +3,7 @@ unless Capistrano::Configuration.respond_to?(:instance)
 end
 
 require 'capistrano'
-require 'campfire'
+require 'tinder'
 
 Capistrano::Configuration.instance.load do
 
@@ -14,6 +14,7 @@ Capistrano::Configuration.instance.load do
 		namespace :notify do
 		  desc 'Alert Campfire of a deploy'
 		  task :campfire do
+		
 		    branch_name = branch.split('/', 2).last
 		    user = `git config --get user.name`
         email = `git config --get user.email`
@@ -24,11 +25,12 @@ Capistrano::Configuration.instance.load do
 		    deploying = `git rev-parse HEAD`[0,7]
 		    compare_url = "#{source_repo_url}/compare/#{deployed}...#{deploying}"
 		
-		    Campfire.notify(
-		      "#{deployer} deployed " +
-		      "#{branch_name} (#{deployed}..#{deploying}) to #{rails_env} " +
-		      "with `cap #{ARGV.join(' ')}` (#{compare_url})"
-		    )
+				campfire = Tinder::Campfire.new 'pig', :token => 'f40051873e877ad46c2adcf59902174e7fab0376'
+				room = campfire.find_room_by_name("The Web Team")
+				room.speak "#{deployer} deployed "
+				room.speak "#{branch_name} (#{deployed}..#{deploying}) to #{rails_env} "
+				room.speak "with `cap #{ARGV.join(' ')}` (#{compare_url})"
+				
 		  end
 		end
 	end
