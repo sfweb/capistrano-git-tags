@@ -9,7 +9,7 @@ Capistrano::Configuration.instance.load do
 
 	before "deploy:update", "git:release_notes:build"
 	after "git:release_notes:build", "git:release_notes:push_version_file"
-	after "git:notifier:campfire", "git:release_notes:empty_changelog"
+	after "git:notifier:mailer", "git:release_notes:empty_changelog"
 
   namespace :git do
 
