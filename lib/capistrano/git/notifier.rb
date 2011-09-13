@@ -7,7 +7,7 @@ require 'tinder'
 
 Capistrano::Configuration.instance.load do
 
-	after "deploy:update", "git:notify:campfire"
+	after "deploy:update", "git:notifier:campfire"
 	
   namespace :git do
 
