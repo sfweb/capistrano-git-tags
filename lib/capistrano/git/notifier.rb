@@ -11,7 +11,7 @@ Capistrano::Configuration.instance.load do
 	
   namespace :git do
 
-		namespace :notify do
+		namespace :notifier do
 		  desc 'Alert Campfire of a deploy'
 		  task :campfire do
 		
