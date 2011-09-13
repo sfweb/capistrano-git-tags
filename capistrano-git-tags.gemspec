@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency("capistrano", [">= 1.0.0"])
   s.add_dependency("tinder")
+  s.add_dependency("pony")
 
   s.has_rdoc = false
 end
