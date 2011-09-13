@@ -64,7 +64,7 @@ Capistrano::Configuration.instance.load do
 	      body << release_notes.gsub(/^ */, ' ' * 4)
 	      body << "\n----------------------------------------------------------------\n\n"
 				      
-				Pony.mail(:to => 'sfweb@sourcefire.com', 
+				Pony.mail(:to => email_recipients, 
 				:via => :sendmail, 
 				:from => "Sourcefire Web Team <webteam@sourcefire.com>",
 				:subject => "deployment notice: #{branch_name} branch of #{application_name} to #{rails_env}" ,
