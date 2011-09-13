@@ -27,11 +27,11 @@ Capistrano::Configuration.instance.load do
 		    user = `git config --get user.name`
         email = `git config --get user.email`
 		    deployer = "#{user} (#{email})"
+		    source_repo = `git config --get remote.origin.url`.split(':')[1].split('.')[0]
 		    
-
 		    deployed = `curl -s http://github.com/site/sha`[0,7]
 		    deploying = `git rev-parse HEAD`[0,7]
-		    compare_url = "#{source_repo_url}/compare/#{deployed}...#{deploying}"
+		    compare_url = "http://github.com/#{source_repo}/compare/#{deployed}...#{deploying}"
 		
 				campfire = Tinder::Campfire.new 'pig', :token => 'f40051873e877ad46c2adcf59902174e7fab0376'
 				room = campfire.find_room_by_name("The Web Team")
