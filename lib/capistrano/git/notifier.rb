@@ -29,7 +29,7 @@ Capistrano::Configuration.instance.load do
 		    deployer = "#{user} (#{email})"
 		    source_repo = `git config --get remote.origin.url`.split(':')[1].split('.')[0]
 		    
-		    deployed = `curl -s http://github.com/site/sha`[0,7]
+		    deployed = `git rev-list --tags | head -n 1`[0,7]
 		    deploying = `git rev-parse HEAD`[0,7]
 		    compare_url = "http://github.com/#{source_repo}/compare/#{deployed}...#{deploying}"
 		
