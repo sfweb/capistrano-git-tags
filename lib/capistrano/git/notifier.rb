@@ -34,6 +34,9 @@ Capistrano::Configuration.instance.load do
 				room.speak "#{branch_name} branch of #{application_name} to #{rails_env} "
 				room.speak "with `cap #{ARGV.join(' ')}` (#{compare_url})"
 				
+				release_notes = File.read(rails_root + "/config/CHANGELOG")
+				room.speak "#{release_notes}"
+				
 		  end
 		end
 	end
