@@ -1,8 +1,8 @@
 unless Capistrano::Configuration.respond_to?(:instance)
   abort "capistrano/git/release_notes requires Capistrano 2"
 end
-
 require 'capistrano'
+require 'tags'
 require 'tempfile'
 
 Capistrano::Configuration.instance.load do
@@ -15,18 +15,18 @@ Capistrano::Configuration.instance.load do
 
     namespace :release_notes do
 
-			def tag_format(options = {})
-        tag_format = ":rails_env_:release"
-        tag_format = tag_format.gsub(":rails_env", options[:rails_env] || rails_env)
-        tag_format = tag_format.gsub(":release",   options[:release]   || "")
-        tag_format
-      end
-
       desc "Ask deploy user if release notes have been updated and build VERSION file"
       task :build do
         user = `git config --get user.name`
         email = `git config --get user.email`
-        deployed = "#{tag_format(:release => release_name)}"
+        
+       	tags = `git tag -l`.split(/\n/).reverse
+				deployed_version = "#{tag_format(:release => release_name)}"
+				deployed = tags[1]
+				deploying = tags[0]
+				
+				source_repo = repository.split(':')[1].split('.')[0]
+				compare_url = "http://github.com/#{source_repo}/compare/#{deployed}...#{deploying}"
 
 				response = Capistrano::CLI.ui.ask("Have you updated the release notes in config/CHANGELOG?")
 				if response =~ /y(es)?/i
@@ -35,9 +35,10 @@ Capistrano::Configuration.instance.load do
 						Tempfile.open File.basename(rails_root + "/public/tmp") do |tempfile|
 				      # prepend data to tempfile
 				      tempfile << "----------------------------------------------------------------\n"
-							tempfile << "Version: #{deployed.strip}\n"
+							tempfile << "Version: #{deployed_version.strip}\n"
 				      tempfile << "Deployed: #{Date.today} at #{Time.now}\n"
 				      tempfile << "Contact: #{user.strip} (#{email.strip})\n"
+				      tempfile << "Compare: #{compare_url}\n"
 				      tempfile << "----------------------------------------------------------------\n"
 				      tempfile << release_notes.gsub(/^ */, ' ' * 4)
 				      tempfile << "\n----------------------------------------------------------------\n\n"
@@ -63,7 +64,6 @@ Capistrano::Configuration.instance.load do
       task :empty_changelog do
       	File.open(rails_root + "/config/CHANGELOG",'w') {|file| file << ""}
       end
-      
       
       desc "Push git revision with new VERSION file"
 			task :push_version_file do

@@ -1,8 +1,8 @@
 unless Capistrano::Configuration.respond_to?(:instance)
   abort "capistrano/git/notifier requires Capistrano 2"
 end
-
 require 'capistrano'
+require 'tags'
 require 'tinder'
 require 'pony'
 
@@ -15,19 +15,13 @@ Capistrano::Configuration.instance.load do
 
 		namespace :notifier do
 
-			def tag_format(options = {})
-        tag_format = ":rails_env_:release"
-        tag_format = tag_format.gsub(":rails_env", options[:rails_env] || rails_env)
-        tag_format = tag_format.gsub(":release",   options[:release]   || "")
-        tag_format
-      end
-
-			branch_name = `git branch`.split(/\s/)[1]
 			user = `git config --get user.name`
 			email = `git config --get user.email`
 			deployer = "#{user} (#{email})"
-			source_repo = `git config --get remote.origin.url`.split(':')[1].split('.')[0]
-			application_name = `git config --get remote.origin.url`.strip.split('/').last.split('.').first
+			
+			source_repo = repository.split(':')[1].split('.')[0]
+			branch_name = `git branch`.split(/\s/)[1]
+			application_name = repository.strip.split('/').last.split('.').first
 			
       
 		  desc 'Alert Campfire of a deploy'
@@ -39,8 +33,8 @@ Capistrano::Configuration.instance.load do
 				deploying = tags[0]
 				compare_url = "http://github.com/#{source_repo}/compare/#{deployed}...#{deploying}"
 
-				campfire = Tinder::Campfire.new 'pig', :token => 'f40051873e877ad46c2adcf59902174e7fab0376'
-				room = campfire.find_room_by_name("The Web Team")
+				campfire = Tinder::Campfire.new campfire_subdomain, :token => campfire_api_token
+				room = campfire.find_room_by_name(capfire_room)
 				room.speak "#{deployer} deployed "
 				room.speak "#{branch_name} branch of #{application_name} to #{rails_env} "
 				room.speak "with `cap #{ARGV.join(' ')}` (#{compare_url})"
@@ -73,11 +67,13 @@ Capistrano::Configuration.instance.load do
 	      body << release_notes.gsub(/^ */, ' ' * 4)
 	      body << "\n----------------------------------------------------------------\n\n"
 				      
-				Pony.mail(:to => email_recipients, 
-				:via => :sendmail, 
-				:from => "Sourcefire Web Team <webteam@sourcefire.com>",
-				:subject => "deployment notice: #{branch_name} branch of #{application_name} to #{rails_env}" ,
-				:body => body)
+				Pony.mail(
+					:to => email_recipients, 
+					:via => :sendmail, 
+					:from => email_sender,
+					:subject => "deployment notice: #{branch_name} branch of #{application_name} to #{rails_env}" ,
+					:body => body
+				)
 			end
 		end
 	end
