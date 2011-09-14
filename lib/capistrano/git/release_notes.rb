@@ -2,7 +2,6 @@ unless Capistrano::Configuration.respond_to?(:instance)
   abort "capistrano/git/release_notes requires Capistrano 2"
 end
 require 'capistrano'
-require 'tags'
 require 'tempfile'
 
 Capistrano::Configuration.instance.load do

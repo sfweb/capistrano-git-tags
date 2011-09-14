@@ -2,7 +2,6 @@ unless Capistrano::Configuration.respond_to?(:instance)
   abort "capistrano/git/notifier requires Capistrano 2"
 end
 require 'capistrano'
-require 'tags'
 require 'tinder'
 require 'pony'
 
