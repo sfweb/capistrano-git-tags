@@ -25,9 +25,9 @@ Capistrano::Configuration.instance.load do
 			email = `git config --get user.email`
 			deployer = "#{user} (#{email})"
 			
-			source_repo = repository.split(':')[1].split('.')[0]
+			source_repo = `git config --get remote.origin.url`.split(':')[1].split('.')[0]
 			branch_name = `git branch`.split(/\s/)[1]
-			application_name = repository.strip.split('/').last.split('.').first
+			application_name = `git config --get remote.origin.url`.strip.split('/').last.split('.').first
 			
       
 		  desc 'Alert Campfire of a deploy'

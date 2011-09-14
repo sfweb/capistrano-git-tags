@@ -31,7 +31,7 @@ Capistrano::Configuration.instance.load do
 				deployed = tags[1]
 				deploying = tags[0]
 				
-				source_repo = repository.split(':')[1].split('.')[0]
+				source_repo = `git config --get remote.origin.url`.split(':')[1].split('.')[0]
 				compare_url = "http://github.com/#{source_repo}/compare/#{deployed}...#{deploying}"
 
 				response = Capistrano::CLI.ui.ask("Have you updated the release notes in config/CHANGELOG?")
