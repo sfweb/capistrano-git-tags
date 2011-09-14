@@ -40,7 +40,7 @@ Capistrano::Configuration.instance.load do
 				compare_url = "http://github.com/#{source_repo}/compare/#{deployed}...#{deploying}"
 
 				campfire = Tinder::Campfire.new campfire_subdomain, :token => campfire_api_token
-				room = campfire.find_room_by_name(capfire_room)
+				room = campfire.find_room_by_name(campfire_room)
 				room.speak "#{deployer} deployed "
 				room.speak "#{branch_name} branch of #{application_name} to #{rails_env} "
 				room.speak "with `cap #{ARGV.join(' ')}` (#{compare_url})"
