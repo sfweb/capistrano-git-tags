@@ -21,10 +21,10 @@ Capistrano::Configuration.instance.load do
       desc "Place release tag into Git and push it to server."
       task :push_deploy_tag do
       	tag = tag_format(:release => release_name)
-      	on_rollback {
+      	on_rollback do
           `git tag -d #{tag}`
           `git push origin :refs/tags/#{tag}`
-      	}
+      	end
         user = `git config --get user.name`
         email = `git config --get user.email`
 
