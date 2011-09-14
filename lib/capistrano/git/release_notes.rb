@@ -15,6 +15,13 @@ Capistrano::Configuration.instance.load do
 
     namespace :release_notes do
 
+			def tag_format(options = {})
+        tag_format = ":rails_env_:release"
+        tag_format = tag_format.gsub(":rails_env", options[:rails_env] || rails_env)
+        tag_format = tag_format.gsub(":release",   options[:release]   || "")
+        tag_format
+      end
+
       desc "Ask deploy user if release notes have been updated and build VERSION file"
       task :build do
         user = `git config --get user.name`
