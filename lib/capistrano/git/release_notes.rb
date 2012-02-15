@@ -20,9 +20,19 @@ Capistrano::Configuration.instance.load do
         tag_format = tag_format.gsub(":release",   options[:release]   || "")
         tag_format
       end
+      
+      def app_root
+      	if rails_root
+      		return rails_root
+      	else
+      		return settings.root
+      	end
+      end
 
       desc "Ask deploy user if release notes have been updated and build VERSION file"
       task :build do
+      	
+      	
         user = `git config --get user.name`
         email = `git config --get user.email`
         
@@ -36,9 +46,9 @@ Capistrano::Configuration.instance.load do
 
 				response = Capistrano::CLI.ui.ask("Have you updated the release notes in config/CHANGELOG?")
 				if response =~ /y(es)?/i
-					release_notes = File.read(rails_root + "/config/CHANGELOG")
+					release_notes = File.read(app_root + "/config/CHANGELOG")
 					if release_notes  != ""
-						Tempfile.open File.basename(rails_root + "/public/tmp") do |tempfile|
+						Tempfile.open File.basename(app_root + "/public/tmp") do |tempfile|
 				      # prepend data to tempfile
 				      tempfile << "----------------------------------------------------------------\n"
 							tempfile << "Version: #{deployed_version.strip}\n"
@@ -49,7 +59,7 @@ Capistrano::Configuration.instance.load do
 				      tempfile << release_notes.gsub(/^ */, ' ' * 4)
 				      tempfile << "\n----------------------------------------------------------------\n\n"
 				
-				      File.open(rails_root + "/public/VERSION", File::RDWR|File::CREAT) do |file|
+				      File.open(app_root + "/public/VERSION", File::RDWR|File::CREAT) do |file|
 				        # append original data to tempfile
 				        tempfile << file.read
 				        # reset file positions
@@ -68,7 +78,7 @@ Capistrano::Configuration.instance.load do
       
       desc "Empty changelog for next deploy"
       task :empty_changelog do
-      	File.open(rails_root + "/config/CHANGELOG",'w') {|file| file << ""}
+      	File.open(app_root + "/config/CHANGELOG",'w') {|file| file << ""}
       end
       
       desc "Push git revision with new VERSION file"

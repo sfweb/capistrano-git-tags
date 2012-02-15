@@ -21,6 +21,14 @@ Capistrano::Configuration.instance.load do
         tag_format
       end
 
+			def app_root
+      	if rails_root
+      		return rails_root
+      	else
+      		return settings.root
+      	end
+      end
+
 			user = `git config --get user.name`
 			email = `git config --get user.email`
 			deployer = "#{user} (#{email})"
@@ -45,7 +53,7 @@ Capistrano::Configuration.instance.load do
 				room.speak "#{branch_name} branch of #{application_name} to #{rails_env} "
 				room.speak "with `cap #{ARGV.join(' ')}` (#{compare_url})"
 				
-				release_notes = File.read(rails_root + "/config/CHANGELOG").split(/\n/)
+				release_notes = File.read(app_root + "/config/CHANGELOG").split(/\n/)
 				release_notes.each do |line|
 					room.speak "#{line}"
 				end
@@ -62,7 +70,7 @@ Capistrano::Configuration.instance.load do
 				deploying = tags[0]
 				compare_url = "http://github.com/#{source_repo}/compare/#{deployed}...#{deploying}"
 				
-				release_notes = File.read(rails_root + "/config/CHANGELOG")
+				release_notes = File.read(app_root + "/config/CHANGELOG")
 				body = ""
 				body << "----------------------------------------------------------------\n"
 				body << "Version: #{deployed_version.strip}\n"
