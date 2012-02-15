@@ -22,10 +22,10 @@ Capistrano::Configuration.instance.load do
       end
       
       def app_root
-      	if rails_root
-      		return rails_root
+      	if rails_root.nil?
+      		return settings.root		
       	else
-      		return settings.root
+      		return rails_root
       	end
       end
 
